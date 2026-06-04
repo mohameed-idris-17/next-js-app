@@ -1,6 +1,6 @@
 name: Java API Test Workflow
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   test:
@@ -16,13 +16,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Cache Gradle packages
+      - name: Cache Maven packages
         uses: actions/cache@v3
         with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-            ${{ runner.os }}-gradle-
+            ${{ runner.os }}-maven-
 
-      - name: Run tests with Gradle
-        run: ./gradlew test
+      - name: Run tests with Maven
+        run: mvn -B test
